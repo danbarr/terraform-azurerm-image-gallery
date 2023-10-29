@@ -1,9 +1,3 @@
-variable "location" {
-  type        = string
-  description = "The Azure region where resources will be created."
-  default     = "centralus"
-}
-
 variable "resource_group_name" {
   type        = string
   description = "Name of the existing resource group where the gallery will be created."
