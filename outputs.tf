@@ -8,12 +8,9 @@ output "image_gallery_unique_name" {
   value       = azurerm_shared_image_gallery.packer.unique_name
 }
 
-output "shared_image_names" {
-  description = "Names of the shared image definitions."
-  value       = values(azurerm_shared_image.packer)[*].name
-}
-
-output "shared_image_ids" {
-  description = "IDs of the shared image definitions."
-  value       = values(azurerm_shared_image.packer)[*].id
+output "shared_images" {
+  description = "Shared image definitions."
+  value = {
+    for image in azurerm_shared_image.packer : image.name => image.id
+  }
 }
