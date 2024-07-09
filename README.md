@@ -7,13 +7,14 @@ This module creates an Azure compute gallery optionally seeded with image defini
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.11.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
+| <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) | >= 3.43.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.11.0 |
+| <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) | >= 3.43.0 |
 
 ## Resources
 
@@ -29,7 +30,7 @@ This module creates an Azure compute gallery optionally seeded with image defini
 |------|-------------|------|---------|:--------:|
 | <a name="input_publisher"></a> [publisher](#input\_publisher) | Publisher name to use on image definitions. | `string` | n/a | yes |
 | <a name="input_resource_group_name"></a> [resource\_group\_name](#input\_resource\_group\_name) | Name of the existing resource group where the gallery will be created. | `string` | n/a | yes |
-| <a name="input_image_definitions"></a> [image\_definitions](#input\_image\_definitions) | VM image definitions to create in the gallery. | <pre>list(object({<br>    name                    = string<br>    os_type                 = string<br>    offer                   = string<br>    sku                     = string<br>    app                     = string<br>    generation              = optional(string, "V2")<br>    trusted_launch_enabled  = optional(bool, true)<br>    confidential_vm_enabled = optional(bool)<br>  }))</pre> | `[]` | no |
+| <a name="input_image_definitions"></a> [image\_definitions](#input\_image\_definitions) | VM image definitions to create in the gallery. | <pre>list(object({<br>    name          = string<br>    os_type       = string<br>    offer         = string<br>    sku           = string<br>    app           = string<br>    generation    = optional(string, "V2")<br>    security_type = optional(string, "TrustedLaunchSupported")<br>  }))</pre> | `[]` | no |
 | <a name="input_image_gallery_description"></a> [image\_gallery\_description](#input\_image\_gallery\_description) | Description for the shared image gallery. | `string` | `"Shared images built by Packer."` | no |
 | <a name="input_image_gallery_name"></a> [image\_gallery\_name](#input\_image\_gallery\_name) | Name for the shared image gallery. | `string` | `"packer_images"` | no |
 
