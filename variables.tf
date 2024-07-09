@@ -32,30 +32,43 @@ variable "publisher" {
 
 variable "image_definitions" {
   type = list(object({
-    name                    = string
-    os_type                 = string
-    offer                   = string
-    sku                     = string
-    app                     = string
-    generation              = optional(string, "V2")
-    trusted_launch_enabled  = optional(bool, true)
-    confidential_vm_enabled = optional(bool)
+    name          = string
+    os_type       = string
+    offer         = string
+    sku           = string
+    app           = string
+    generation    = optional(string, "V2")
+    security_type = optional(string, "TrustedLaunchSupported")
   }))
 
   description = "VM image definitions to create in the gallery."
   default     = []
 
   validation {
-    condition = alltrue([for o in var.image_definitions:
-      anytrue([o.trusted_launch_enabled, o.confidential_vm_enabled]) && o.generation == "V2"
+    condition = alltrue([for o in var.image_definitions :
+      contains(["Windows", "Linux"], o.os_type)
     ])
-    error_message = "If trusted launch or confidential VM are enabled, `generation` must be `V2`."
+    error_message = "Valid values for `os_type` are `Windows` and `Linux`."
   }
 
   validation {
-    condition = alltrue([for o in var.image_definitions:
-      ! alltrue([o.trusted_launch_enabled != null, o.confidential_vm_enabled != null])
+    condition = alltrue([for o in var.image_definitions :
+      contains(["V1", "V2"], o.generation)
     ])
-    error_message = "Only one of `trusted_launch_enabled` or `confidential_vm_enabled` can be set."
+    error_message = "Valid values for `generation` are `V1` and `V2`."
+  }
+
+  validation {
+    condition = alltrue([for o in var.image_definitions :
+      o.generation == "V1" ? o.security_type == "Standard" : true
+    ])
+    error_message = "Only the `Standard` security type is supported for Gen 1 VMs."
+  }
+
+  validation {
+    condition = alltrue([for o in var.image_definitions :
+      contains(["Standard", "TrustedLaunchSupported", "TrustedLaunch", "ConfidentialVMSupported", "ConfidentialVM"], o.security_type)
+    ])
+    error_message = "Valid values for `security_type` are: `Standard`, `TrustedLaunchSupported` (default), `TrustedLaunch`, `ConfidentialVMSupported`, `ConfidentialVM`."
   }
 }
